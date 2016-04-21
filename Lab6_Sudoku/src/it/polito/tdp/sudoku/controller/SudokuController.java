@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.sudoku.model.SudokuGenerator;
+import it.polito.tdp.sudoku.model.SudokuSolver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -15,6 +16,8 @@ public class SudokuController {
 	final static int levelEasy = 45;
 	final static int levelAdvanced = 50;
 	final static int levelExpert = 55;
+	SudokuSolver solver=new SudokuSolver();
+	int[][] matrix;
 	
     @FXML
     private ResourceBundle resources;
@@ -271,14 +274,17 @@ public class SudokuController {
     void doGenerate(ActionEvent event){
     	// Per generare un nuova nuova griglia di Sudoku
 		SudokuGenerator sg = new SudokuGenerator();
-		int [][] matrix = sg.nextBoard(levelExpert);
+		matrix = sg.nextBoard(levelExpert);
+		//QUI CHIAMO IL MODEL
+		
 		
 		printMatrixOnScreen(matrix);
     }
     
     @FXML
     void doSolve(ActionEvent event){
-    	
+    	matrix=solver.risolviSudoku(matrix, 81-levelExpert);		
+		printMatrixOnScreen(matrix);
     }
     
     @FXML
