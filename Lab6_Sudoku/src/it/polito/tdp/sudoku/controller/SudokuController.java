@@ -9,6 +9,7 @@ import it.polito.tdp.sudoku.model.SudokuGenerator;
 import it.polito.tdp.sudoku.model.SudokuSolver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 
 public class SudokuController {
@@ -20,10 +21,12 @@ public class SudokuController {
 	int[][] matrix;
 	
     @FXML
-    private ResourceBundle resources;
-
+    private ResourceBundle resources; 
+    
     @FXML
     private URL location;
+    
+   
 
     @FXML
     private Label lbl10;
@@ -268,13 +271,31 @@ public class SudokuController {
     @FXML
     private Label lbl81;
     
+    @FXML
+    private ChoiceBox<String> chBox;
+    
     List<Label> labelList = new ArrayList<Label>(); 
     
     @FXML
     void doGenerate(ActionEvent event){
+    	
+    	String s=chBox.getValue();
+    	if(s==null){
+    		System.out.println("Scegli una difficolta'");
+    		return;
+    	}    	
+    		
     	// Per generare un nuova nuova griglia di Sudoku
 		SudokuGenerator sg = new SudokuGenerator();
-		matrix = sg.nextBoard(levelExpert);
+		
+		//Gestione difficolta'
+		if(s.compareTo("Facile")==0)
+			matrix = sg.nextBoard(levelEasy);
+		else if(s.compareTo("Avanzato")==0)
+			matrix = sg.nextBoard(levelAdvanced);
+		else if(s.compareTo("Esperto")==0)
+			matrix = sg.nextBoard(levelExpert);
+		
 		//QUI CHIAMO IL MODEL
 		
 		
@@ -283,12 +304,14 @@ public class SudokuController {
     
     @FXML
     void doSolve(ActionEvent event){
-    	matrix=solver.risolviSudoku(matrix, 81-levelExpert);		
+    	matrix=solver.risolviSudoku(matrix, 81-levelExpert);
+    	
 		printMatrixOnScreen(matrix);
     }
     
     @FXML
     void initialize() {
+    	assert chBox != null : "fx:id=\"chBox\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl10 != null : "fx:id=\"lbl10\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl11 != null : "fx:id=\"lbl11\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl12 != null : "fx:id=\"lbl12\" was not injected: check your FXML file 'Sudoku.fxml'.";
@@ -370,6 +393,12 @@ public class SudokuController {
         assert lbl79 != null : "fx:id=\"lbl79\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl80 != null : "fx:id=\"lbl80\" was not injected: check your FXML file 'Sudoku.fxml'.";
         assert lbl81 != null : "fx:id=\"lbl81\" was not injected: check your FXML file 'Sudoku.fxml'.";
+        //chBox = new ChoiceBox<String>();
+        chBox.getItems().add("Facile");
+        chBox.getItems().add("Avanzato");
+        chBox.getItems().add("Esperto");
+        
+        
         
         labelList.add(lbl1);
         labelList.add(lbl2);

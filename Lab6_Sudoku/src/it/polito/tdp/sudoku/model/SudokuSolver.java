@@ -1,46 +1,44 @@
 package it.polito.tdp.sudoku.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class SudokuSolver {
 	private int matrix[][]=new int[9][9];
-	//NON USATO PER ORA
-	private List<ArrayList<Integer>> sudoku=new ArrayList<ArrayList<Integer>>();
+	private int ris[][]=new int[9][9];
+	private boolean flag;
 	
 	
 	public int[][] risolviSudoku(int[][] temp,int passo){
 		//CONTROLLARE
+		flag=false;
 		matrix=temp;		
-		this.ricorsione(passo);
-		
-		return matrix;
+		this.ricorsione();
+		return ris;
 	}
 	
-	public void ricorsione(int passo){
-		System.out.println(passo);
+	public void ricorsione(){
+		System.out.println();
 		//USCITA
-		if(passo==81)
+		if(checkPasso()==81){
+			flag=true;			
+			debug();
+			ris=matrix;
 			return;
-		for(int i=0;i<9;i++){
-			for(int j=0;j<9;j++){
+		}
+		for(int i=0;i<9&&flag==false;i++){
+			for(int j=0;j<9&&flag==false;j++){				
 				//SE MANCA IL NUMERO
 				if(matrix[i][j]==0){
-					for(int num=1;num<=9;num++){					
+					for(int num=1;num<=9&&flag==false;num++){					
 						if(checkNumero(num,i,j)){
-							matrix[i][j]=num;
-							passo++;
-							ricorsione(passo);
-						}					
-						
+							matrix[i][j]=num;							
+							ricorsione();
+						}			
 					}
 					//SE E' IMPOSSIBILE ANDARE AVANTI
-					passo--;
-					matrix[i][j]=0;
+					if(flag==false)
+						matrix[i][j]=0;			
 					return;
-				}
-					
-			
+				}				
 			}		
 		}
 	}
@@ -71,19 +69,31 @@ public class SudokuSolver {
 			c--;
 		
 		for(int ri=(r-1);ri<=r+1;ri++){
-			for(int co=(c-1);co<=c;co++){
+			for(int co=(c-1);co<=c+1;co++){
 				if(matrix[ri][co]==numero)
-					return false;
-				
-			}
-			
-		}		
-		
-		
-		
-		
-		
+					return false;				
+			}			
+		}	
 		return true;
 	}
-
+	
+	public void debug(){
+		for(int i=0;i<9;i++){
+			for(int j=0;j<9;j++){
+				System.out.print(matrix[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
+	
+	public int checkPasso(){
+		int check=0;
+		for(int i=0;i<9;i++){
+			for(int j=0;j<9;j++){
+				if(matrix[i][j]!=0)
+					check++;
+			}			
+		}		
+		return check;
+	}
 }
